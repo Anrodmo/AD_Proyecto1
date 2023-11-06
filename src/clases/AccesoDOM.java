@@ -163,8 +163,8 @@ public class AccesoDOM {
      * @param id valor de publicado
      * @return 0 operación correcta, -1 error.
      */
-    public int insertarLibroEnDOM(String author, String title, String id, String Genre,
-            String price,String publish_date, String descripción){
+    public int insertarLibroEnDOM(String author, String title, String id, String genre,
+            String price,String publish_date, String description){
         int correcto = 0;
         
         try{
@@ -173,23 +173,42 @@ public class AccesoDOM {
                     //CREATE TITULO con el texto en medio
             Node nAuthor = miDocumento.createElement("author"); // crea atiquetas.
             Node nAuthor_Text=miDocumento.createTextNode(author); // asigna el author
-
             nAuthor.appendChild(nAuthor_Text); // añade el texto del author al nodo author.
 
             Node nTitle = miDocumento.createElement("title"); // crea atiquetas.
             Node nTitle_text=miDocumento.createTextNode(title); // asigna el title
-
             nTitle.appendChild(nTitle_text); // añade el texto del title al nodo title.
+            
+            Node nGenre = miDocumento.createElement("genre"); // crea atiquetas.
+            Node nGenre_Text=miDocumento.createTextNode(genre); // asigna el genero
+            nGenre.appendChild(nGenre_Text); // añade el texto del title al nodo genero.
+            
+            Node nPrice = miDocumento.createElement("price"); // crea atiquetas.
+            Node nPrice_Text=miDocumento.createTextNode(price); // asigna el precio
+            nPrice.appendChild(nPrice_Text); // añade el texto del title al nodo precio.
+            
+            Node nDate = miDocumento.createElement("publish_date"); // crea atiquetas.
+            Node nDate_Text=miDocumento.createTextNode(publish_date); // asigna el fecha pub
+            nDate.appendChild(nDate_Text); // añade el texto del title al nodo fecha pub.
+            
+            Node nDescripcion = miDocumento.createElement("description"); // crea atiquetas.
+            Node nDescripcion_Text=miDocumento.createTextNode(description); // asigna el fecha pub
+            nDescripcion.appendChild(nDescripcion_Text); // añade el texto del title al nodo fecha pub.
 
-            Node nLibro = miDocumento.createElement("Libro"); // creo el padre Libro
-            ((Element)nLibro).setAttribute("publicado", id); // creo el atributo y lo pongo en Libro
-            nLibro.appendChild(nAuthor);
-            nLibro.appendChild(nTitle);  // Asigno como hijos los nodos author y title
+            Node nBook = miDocumento.createElement("book"); // creo el padre Libro
+            ((Element)nBook).setAttribute("id", id); // creo el atributo y lo pongo en Libro
+            
+            nBook.appendChild(nAuthor);
+            nBook.appendChild(nTitle);
+            nBook.appendChild(nGenre);
+            nBook.appendChild(nPrice); // Asigno como hijos los nodos author y title
+            nBook.appendChild(nDate);
+            nBook.appendChild(nDescripcion);
 
-            nLibro.appendChild(miDocumento.createTextNode("\n")); // inserta salto de linea
+            nBook.appendChild(miDocumento.createTextNode("\n")); // inserta salto de linea
 
             Node raiz  = miDocumento.getFirstChild();  // cojo la raiz --> miDocumento.getChildNodes().item(0).
-            raiz.appendChild(nLibro);  // añado el Libro a la raiz.
+            raiz.appendChild(nBook);  // añado el Libro a la raiz.
             System.out.println("... Libro insertado en el DOM");         
         }catch (DOMException ex){
             System.out.println("... Error en la creación del nodo Hijo.");

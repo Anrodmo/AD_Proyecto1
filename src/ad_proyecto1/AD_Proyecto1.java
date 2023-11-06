@@ -26,6 +26,13 @@ public class AD_Proyecto1 {
         
         acceso.abrirXMLaDom(archivo);              
         acceso.recorreDOMyMuestra();
+        
+        acceso.insertarLibroEnDOM("El fari", "las aventuras", "01", "aventuras",
+                "50", "01/01/1990", "las aventuras de un taxista");
+        
+        
+        acceso.recorreDOMyMuestra();
+        
     }
     
 }
