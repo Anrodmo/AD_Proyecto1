@@ -19,6 +19,8 @@ public class AD_Proyecto1 {
      */
     public static void main(String[] args) {
         String ruta = "./src/ad_proyecto1/Libros.xml";
+        String ruta2 = "./src/ad_proyecto1/Libros2.xml";
+
         AccesoDOM acceso = new AccesoDOM();
         
         if(ruta==null)ruta=""; // Evito la PointNullException al crear File
@@ -32,6 +34,8 @@ public class AD_Proyecto1 {
         acceso.recorreDOMyMuestra();
         acceso.deleteNode("las aventuras");
         acceso.recorreDOMyMuestra();
+        acceso.guardarDomcomoArchivo(ruta2);
+        
         
     }
     
