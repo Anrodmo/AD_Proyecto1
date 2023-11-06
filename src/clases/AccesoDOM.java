@@ -217,4 +217,39 @@ public class AccesoDOM {
         return correcto;
     }
     
+    
+        public int deleteNode(String tit){
+        System.out.println("Buscando el libro "+tit+"para borrarlo");
+        
+        try{
+            //Node root)=doc.getFirstChil();
+            Node raiz= miDocumento.getDocumentElement();
+            NodeList nl1=miDocumento.getElementsByTagName("title");
+            Node n1;
+            
+            for (int i = 0;i<nl1.getLength(); i++) {
+                n1=nl1.item(i);
+                
+                if(n1.getNodeType()==Node.ELEMENT_NODE){//redundante por getelemetsbt tagname, no lo es si usamos getchild notes
+                    if(n1.getChildNodes().item(0).getNodeValue().equals(tit)){
+                        System.out.println("Borrando el nodo <libro> con titulo"+tit);
+                        //n1,getParentNode().removeChild(n1);//borra <titulo> tit</titulo> , pero deja libro y autor
+                        n1.getParentNode().getParentNode().removeChild(n1.getParentNode());                      
+                    }                    
+                }
+            }
+            
+            System.out.println("Nodo borrado");
+            
+            //guardar el arbol DOM en un nuevo arcghivio para mantener nuestro archivo orignal 
+            // guardar DOMcomo Archivo("libros borrados .xml);
+            return 0;
+        }catch(Exception e){
+            System.out.println(e);
+            e.printStackTrace();
+            return -1;
+        }
+        
+    }
+    
 }
