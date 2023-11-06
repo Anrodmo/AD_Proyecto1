@@ -24,9 +24,7 @@ public class AD_Proyecto1 {
         if(ruta==null)ruta=""; // Evito la PointNullException al crear File
         File archivo = new File(ruta);
         
-        acceso.abrirXMLaDom(archivo);
-        
-        
+        acceso.abrirXMLaDom(archivo);              
         acceso.recorreDOMyMuestra();
     }
     

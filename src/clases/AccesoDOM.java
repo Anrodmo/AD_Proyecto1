@@ -158,32 +158,33 @@ public class AccesoDOM {
      *      <Titulo>valor</Titulo>
      *      <Autor>valor</Autor>
      * </Libro>
-     * @param titulo valor de <Titulo>
-     * @param autor valor de <Autor>
-     * @param fecha valor de publicado
+     * @param author valor de <Titulo>
+     * @param title valor de <Autor>
+     * @param id valor de publicado
      * @return 0 operación correcta, -1 error.
      */
-    public int insertarLibroEnDOM(String titulo, String autor, String fecha){
+    public int insertarLibroEnDOM(String author, String title, String id, String Genre,
+            String price,String publish_date, String descripción){
         int correcto = 0;
         
         try{
-            System.out.println("Añadir libro al arbol DOM: "+titulo+";"+autor+";"+fecha+" ...");
+            System.out.println("Añadir libro al arbol DOM: "+author+";"+title+";"+id+" ...");
             //crea los nodos=>los añade al padre desde las hojas a la raíz
                     //CREATE TITULO con el texto en medio
-            Node nTitulo = miDocumento.createElement("Titulo"); // crea atiquetas.
-            Node nTitulo_text=miDocumento.createTextNode(titulo); // asigna el titulo
+            Node nAuthor = miDocumento.createElement("author"); // crea atiquetas.
+            Node nAuthor_Text=miDocumento.createTextNode(author); // asigna el author
 
-            nTitulo.appendChild(nTitulo_text); // añade el texto del titulo al nodo titulo.
+            nAuthor.appendChild(nAuthor_Text); // añade el texto del author al nodo author.
 
-            Node nAutor = miDocumento.createElement("Autor"); // crea atiquetas.
-            Node nAutor_text=miDocumento.createTextNode(autor); // asigna el autor
+            Node nTitle = miDocumento.createElement("title"); // crea atiquetas.
+            Node nTitle_text=miDocumento.createTextNode(title); // asigna el title
 
-            nAutor.appendChild(nAutor_text); // añade el texto del autor al nodo autor.
+            nTitle.appendChild(nTitle_text); // añade el texto del title al nodo title.
 
             Node nLibro = miDocumento.createElement("Libro"); // creo el padre Libro
-            ((Element)nLibro).setAttribute("publicado", fecha); // creo el atributo y lo pongo en Libro
-            nLibro.appendChild(nTitulo);
-            nLibro.appendChild(nAutor);  // Asigno como hijos los nodos titulo y autor
+            ((Element)nLibro).setAttribute("publicado", id); // creo el atributo y lo pongo en Libro
+            nLibro.appendChild(nAuthor);
+            nLibro.appendChild(nTitle);  // Asigno como hijos los nodos author y title
 
             nLibro.appendChild(miDocumento.createTextNode("\n")); // inserta salto de linea
 
