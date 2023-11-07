@@ -142,24 +142,7 @@
            
     </book>
        
-    <book id="bk109">
-              
-        <author>Kress, Peter</author>
-              
-        <title>Paradox Lost</title>
-              
-        <genre>Science Fiction</genre>
-              
-        <price>6.95</price>
-              
-        <publish_date>2000-11-02</publish_date>
-              
-        <description>After an inadvertant trip through a Heisenberg
-      Uncertainty Device, James Salway discovers the problems 
-      of being quantum.</description>
-           
-    </book>
-       
+   
     <book id="bk110">
               
         <author>O'Brien, Tim</author>
@@ -214,4 +197,13 @@
            
     </book>
     
+    <book id="bk113">
+        <author>El fari</author>
+        <title>las aventuras</title>
+        <genre>aventuras</genre>
+        <price>50</price>
+        <publish_date>01/01/1990</publish_date>
+        <description>las aventuras de un taxista</description>
+        
+    </book>
 </catalog>

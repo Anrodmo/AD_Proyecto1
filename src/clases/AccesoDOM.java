@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
  */
 public class AccesoDOM {
     private Document miDocumento;
+    private String ultimoID;
     
     /**
      * Mátodo que obtiene un objeto Document y lo asigna al atributo de la clase
@@ -59,7 +60,7 @@ public class AccesoDOM {
     
     
     /**
-     * Meñtodo que recorre y muestra en pantalla el atrbuto de la clase Document, 
+     * Método que recorre y muestra en pantalla el atrbuto de la clase Document, 
      * previamente debe haber sido generado con el método abrirXMLaDom. 
      */
     public void recorreDOMyMuestra(){
@@ -124,8 +125,12 @@ public class AccesoDOM {
      * @param nodo nodo del que se quieren  mostrar los atributos.
      */
     private void recorreAtributosyMuestra(Node nodo){
-        NamedNodeMap atributos= nodo.getAttributes();       
+        NamedNodeMap atributos= nodo.getAttributes(); 
+        
+        // dado el XML del ejercicio con un único ID lo puedo guardar sin preocuparme de si es el
+        // correcto
         for (int i = 0; i < atributos.getLength(); i++) {
+            this.ultimoID=atributos.item(i).getNodeValue();
             System.out.print("  "+atributos.item(i).getNodeName()+" = "+
                     atributos.item(i).getNodeValue());
         } 
@@ -160,21 +165,26 @@ public class AccesoDOM {
     
     /**
      * Método que inserta un Libro en el Document de la clase. Funcionará en un esquema XML:
-     * <Libro publicado=valor>
-     *      <Titulo>valor</Titulo>
-     *      <Autor>valor</Autor>
-     * </Libro>
-     * @param author valor de <Titulo>
-     * @param title valor de <Autor>
-     * @param id valor de publicado
+     * <book id=valor>
+     *      <author>valor</author>
+     *      <tittle>valor</tittle>
+     *      ...........
+     * </book>
+     * @param author valor de <author>
+     * @param title valor de <tittle>
+     * @param genre valor de <genre>
+     * @param price valor de <price>
+     * @param publish_date valor de <publish_date>
+     * @param description valor de <description>
+     * El atributo id del book se autoincrementa.
      * @return 0 operación correcta, -1 error.
      */
-    public int insertarLibroEnDOM(String author, String title, String id, String genre,
+    public int insertarLibroEnDOM(String author, String title, String genre,
             String price,String publish_date, String description){
         int correcto = 0;
         
         try{
-            System.out.println("Añadir libro al arbol DOM: "+author+";"+title+";"+id+" ...");
+            System.out.println("Añadir libro al arbol DOM:  ...");
             //crea los nodos=>los añade al padre desde las hojas a la raíz
                     //CREATE TITULO con el texto en medio
             Node nAuthor = miDocumento.createElement("author"); // crea atiquetas.
@@ -202,7 +212,8 @@ public class AccesoDOM {
             nDescripcion.appendChild(nDescripcion_Text); // añade el texto del title al nodo fecha pub.
 
             Node nBook = miDocumento.createElement("book"); // creo el padre Libro
-            ((Element)nBook).setAttribute("id", id); // creo el atributo y lo pongo en Libro
+              // nextid() incrementa ultimoID y lo devuelve.
+            ((Element)nBook).setAttribute("id", nextID()); // creo el atributo y lo pongo en Libro
             
             nBook.appendChild(nAuthor);
             nBook.appendChild(nTitle);
@@ -223,8 +234,13 @@ public class AccesoDOM {
         return correcto;
     }
     
-    
-        public int deleteNode(String tit){
+    /**
+     * Borra un <book> y todos sus hijo dado un titulo
+     * @param tit String
+     * @return 0 --> Todo correcto, -1 --> error
+     */
+    public int deleteNode(String tit){
+        int retorno=0;
         System.out.println("Buscando el libro "+tit+"para borrarlo");
         
         try{
@@ -247,18 +263,23 @@ public class AccesoDOM {
             
             System.out.println("Nodo borrado");
             
-            //guardar el arbol DOM en un nuevo arcghivio para mantener nuestro archivo orignal 
+            //guardar el arbol DOM en un nuevo archivo para mantener nuestro archivo orignal 
             // guardar DOMcomo Archivo("libros borrados .xml);
-            return 0;
+           
         }catch(Exception e){
             System.out.println(e);
             e.printStackTrace();
-            return -1;
-        }    
-              
+            retorno= -1;
+        }     
+        return retorno;           
     }
         
-     public void guardarDomcomoArchivo(String nuevoArchivo){
+    /**
+     * Guarda el dom del AccesoDOM en fichero de texto en la ruta facilitada
+     * si el archivo existe lo va a sobreescribir.
+     * @param nuevoArchivo String ruta del archivo
+     */
+    public void guardarDomcomoArchivo(String nuevoArchivo){
         
         try{
             Source src = new DOMSource(miDocumento); // DEFINIR ORIGEN
@@ -275,7 +296,22 @@ public class AccesoDOM {
             
         }catch(Exception e){
               e.printStackTrace();  
+        }      
+    } 
+    
+    /**
+     * Método que incrementa en uno el valor de ultimoID y lo devuelve.
+     * Solo funcion correectamente con ultimoID en formato ..ddd
+     * En XML actual BKddd, no está limitado a que sean 3 dígitos.
+     * @return
+     */
+    private String nextID(){
+            String parteTexto;          
+            int parteNumerica;
+            
+            parteTexto=this.ultimoID.substring(0, 2);
+            parteNumerica =  Integer.parseInt(this.ultimoID.substring(2, this.ultimoID.length()));        
+            return (this.ultimoID=parteTexto+(++parteNumerica));
         }
-    }    
     
 }

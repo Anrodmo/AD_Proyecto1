@@ -31,12 +31,12 @@ public class AD_Proyecto1 {
         acceso.recorreDOMyMuestra();
         
         System.out.println("\n================Creamos libro y mostramos --> El fari  ================= \n");
-        acceso.insertarLibroEnDOM("El fari", "las aventuras", "01", "aventuras",
+        acceso.insertarLibroEnDOM("El fari", "las aventuras", "aventuras",
                 "50", "01/01/1990", "las aventuras de un taxista");
         acceso.recorreDOMyMuestra();
-        System.out.println("\n ================Borramos las aventuras y mostramos======================\n");
+        System.out.println("\n ================Borramos Paradox Lost y mostramos======================\n");
         
-        acceso.deleteNode("las aventuras");
+        acceso.deleteNode("Paradox Lost");
         acceso.recorreDOMyMuestra();
         
         System.out.println("\n ================ Guardamos en un nuevo archivo.======================\n");
