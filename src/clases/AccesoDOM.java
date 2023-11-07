@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -294,7 +295,7 @@ public class AccesoDOM {
             transformer.transform(src, (javax.xml.transform.Result)rst);
             System.out.println("Archivo creado del DOM con éxito\n");
             
-        }catch(Exception e){
+        }catch(IllegalArgumentException | TransformerException e){
               e.printStackTrace();  
         }      
     } 
