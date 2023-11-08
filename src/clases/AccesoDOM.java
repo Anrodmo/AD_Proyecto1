@@ -101,8 +101,7 @@ public class AccesoDOM {
                 if(hijosSonElementos(nodosHijos.item(i).getChildNodes())){
                    System.out.println(""); 
                 }                   
-            }
-            
+            }           
            // commpruebo si el nodo en el que estoy del bucle for tiene hijos.
             if(nodosHijos.item(i).hasChildNodes()){
                 // si los tiene (siempre tienen algo) los recorro con recursividad y muestro y me informo de si son Element
@@ -113,8 +112,7 @@ public class AccesoDOM {
                     // si sus hijos son elementos se habrán mostrado en la recursividad y aqui solo necesito saltar linea para mantener el formato.
                     System.out.println("");
                 }              
-            }
-                
+            }               
         }      
         return tieneHijosElementos;
     }
@@ -246,7 +244,7 @@ public class AccesoDOM {
         
         try{
             //Node root)=doc.getFirstChil();
-            Node raiz= miDocumento.getDocumentElement();
+            //Node raiz= miDocumento.getDocumentElement();
             NodeList nl1=miDocumento.getElementsByTagName("title");
             Node n1;
             
@@ -267,7 +265,7 @@ public class AccesoDOM {
             //guardar el arbol DOM en un nuevo archivo para mantener nuestro archivo orignal 
             // guardar DOMcomo Archivo("libros borrados .xml);
            
-        }catch(Exception e){
+        }catch(DOMException e){
             System.out.println(e);
             e.printStackTrace();
             retorno= -1;
@@ -304,7 +302,7 @@ public class AccesoDOM {
      * Método que incrementa en uno el valor de ultimoID y lo devuelve.
      * Solo funcion correectamente con ultimoID en formato ..ddd
      * En XML actual BKddd, no está limitado a que sean 3 dígitos.
-     * @return
+     * @return String ultimoID incrementado
      */
     private String nextID(){
             String parteTexto;          

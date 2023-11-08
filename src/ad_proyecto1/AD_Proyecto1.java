@@ -6,7 +6,7 @@ package ad_proyecto1;
 
 import clases.AccesoDOM;
 import java.io.File;
-import org.w3c.dom.Document;
+
 
 /**
  *
