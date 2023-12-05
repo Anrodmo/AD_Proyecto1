@@ -6,6 +6,8 @@ package clases;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,12 +27,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * Clase que gestiona el acceso DOM a un xml 
  * @author anrod
  */
 public class AccesoDOM {
-    private Document miDocumento;
-    private String ultimoID;
+    private Document miDocumento; // aqui guardo el DOM
+    private String ultimoID;  // para guardar cual ha sido el ultimo id a la 
+                               // hora de añadir nuevos libros
     
     /**
      * Mátodo que obtiene un objeto Document y lo asigna al atributo de la clase
@@ -38,7 +41,7 @@ public class AccesoDOM {
      * @return 1 todo correcto; -1 error al crear el DOM
      */
     public int abrirXMLaDom (File archivo){
-       int retorno=-1;
+       int retorno=-1; // sino sale bien retorno -1 error
         try {
             System.out.println("Abriendo el archivo XTMl y generando el DOM ....");
             
@@ -52,7 +55,7 @@ public class AccesoDOM {
             
             DocumentBuilder constructorDeDocumentos = fabricaDeDocumentos.newDocumentBuilder();
             miDocumento = constructorDeDocumentos.parse(archivo);
-            retorno=0;              
+            retorno=0;  // si llegamos aqui todo ha ido bien             
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             System.out.println(ex); 
         }       
@@ -61,27 +64,27 @@ public class AccesoDOM {
     
     
     /**
-     * Método que recorre y muestra en pantalla el atrbuto de la clase Document, 
+     * Método que recorre y muestra en pantalla todos los elementos de la clase Document, 
      * previamente debe haber sido generado con el método abrirXMLaDom. 
      */
     public void recorreDOMyMuestra(){
         System.out.println(miDocumento.getFirstChild().getNodeName()); // obtengo el nombre de la raiz y lo imprimo
             // obtengo una lista con todos los nodos hijos de la raiz (En este caso los "Libro")
         NodeList nodosHijos = miDocumento.getFirstChild().getChildNodes();
-            // Llamoal mñetodo recursivo con la lista y el numero de nivel en elque estoy para las tabulaciones
+            // Llamo al método recursivo con la lista y el numero de nivel en el que estoy para las tabulaciones
         recorreElementosyMuestra(nodosHijos,0);
     }
     
     /**
      * metodo recursivo que recorre un nodelist y muestra por pantalla el nivel actual y se llama a si mismo 
-     * para mostrar el nivel inferior.
-     * @param nodosHijos NodeList
+     * para mostrar el nivel inferior. Uso privado
+     * @param nodosHijos NodeList 
      * @param nivel entero que indica el nivel del elemento para gestionar las tabulaciones al mostrar
      * @return true -> si en el nivel actual hay nodos hijos que sean elementos; false en caso contrario.
      */
     private boolean recorreElementosyMuestra(NodeList  nodosHijos, int nivel){
             // Boolean que me va a ayudar a saber si en esta iteración de mostrar un nodo hay elementos
-        boolean tieneHijosElementos=false;
+        boolean tieneHijosElementos=false; // tambien me sirve para saber si tengto que seguir iterando o no.
             // en cada iteracion auemtno el nivel para las tabulaciones.
         nivel++;
             // recorro todos los nodos de la lsista de nodos.
@@ -120,16 +123,18 @@ public class AccesoDOM {
     // pero tambien el de  todos sus hijos <-- esto con dom4j no pasa
     
     /**
-     * Mñetodo que revcorre los atributos de un nodo y losmuiestra en pantalla en la misma línea.
+     * Mñetodo que recorre los atributos de un nodo y los muestra en pantalla en la misma línea.
      * @param nodo nodo del que se quieren  mostrar los atributos.
      */
     private void recorreAtributosyMuestra(Node nodo){
+        // tipo de lista para guardar nodos
         NamedNodeMap atributos= nodo.getAttributes(); 
         
         // dado el XML del ejercicio con un único ID lo puedo guardar sin preocuparme de si es el
         // correcto
+        this.ultimoID=atributos.item(0).getNodeValue();
+        // recorro todos los atributos y los muestro
         for (int i = 0; i < atributos.getLength(); i++) {
-            this.ultimoID=atributos.item(i).getNodeValue();
             System.out.print("  "+atributos.item(i).getNodeName()+" = "+
                     atributos.item(i).getNodeValue());
         } 
@@ -142,7 +147,8 @@ public class AccesoDOM {
      */
     private boolean hijosSonElementos(NodeList  nodosHijos){
         boolean tieneHijosElementos=false;
-        for (int i = 0; i < nodosHijos.getLength(); i++) {           
+        // recorro los hijos hasta encontrar un hijo elemento
+        for (int i = 0; i < nodosHijos.getLength()&& !tieneHijosElementos; i++) {           
             if(nodosHijos.item(i).getNodeType() == Node.ELEMENT_NODE)
                 tieneHijosElementos = true;                    
         }
@@ -150,7 +156,8 @@ public class AccesoDOM {
     }
     
     /**
-     * Método que devuelve un String con tabulaciones en función del entero facilitado. 
+     * Método que devuelve un String con tabulaciones en función del entero facilitado.
+     * Su única función es mmejorar la  visualización por pantalla del XML
      * @param nivel int -> contaidad de tabulaciones que se quiere devolver
      * @return String que solo contiene tabulaciones.
      */
@@ -164,6 +171,7 @@ public class AccesoDOM {
     
     /**
      * Método que inserta un Libro en el Document de la clase. Funcionará en un esquema XML:
+     * Llama al método que maneja los ID para recoger el próximo ID para el book
      * <book id=valor>
      *      <author>valor</author>
      *      <tittle>valor</tittle>
@@ -239,12 +247,13 @@ public class AccesoDOM {
      * @return 0 --> Todo correcto, -1 --> error
      */
     public int deleteNode(String tit){
-        int retorno=0;
+        int retorno=0; // si nada va mal retornamos 0
         System.out.println("Buscando el libro "+tit+"para borrarlo");
         
         try{
             //Node root)=doc.getFirstChil();
             //Node raiz= miDocumento.getDocumentElement();
+            // obtengo todos los elementos (nodos) que sean title
             NodeList nl1=miDocumento.getElementsByTagName("title");
             Node n1;
             
@@ -252,23 +261,22 @@ public class AccesoDOM {
                 n1=nl1.item(i);
                 
                 if(n1.getNodeType()==Node.ELEMENT_NODE){//redundante por getelemetsbt tagname, no lo es si usamos getchild notes
+                    // el primer hijo de un elemento es su valor, si esiugal al titulo buscado hemos
+                    // encontrado el lobro a eliminar
                     if(n1.getChildNodes().item(0).getNodeValue().equals(tit)){
                         System.out.println("Borrando el nodo <libro> con titulo"+tit);
                         //n1,getParentNode().removeChild(n1);//borra <titulo> tit</titulo> , pero deja libro y autor
+       // el padre del nodo title (book), su padre (books), quitamos el hijo padre del titulo que queremos borrar
                         n1.getParentNode().getParentNode().removeChild(n1.getParentNode());                      
                     }                    
                 }
             }
             
-            System.out.println("Nodo borrado");
-            
-            //guardar el arbol DOM en un nuevo archivo para mantener nuestro archivo orignal 
-            // guardar DOMcomo Archivo("libros borrados .xml);
-           
+            System.out.println("Nodo borrado");                               
         }catch(DOMException e){
             System.out.println(e);
             e.printStackTrace();
-            retorno= -1;
+            retorno= -1;  // si estamos aqui es que algo fue mal
         }     
         return retorno;           
     }
@@ -278,24 +286,39 @@ public class AccesoDOM {
      * si el archivo existe lo va a sobreescribir.
      * @param nuevoArchivo String ruta del archivo
      */
-    public void guardarDomcomoArchivo(String nuevoArchivo){
-        
-        try{
-            Source src = new DOMSource(miDocumento); // DEFINIR ORIGEN
-            StreamResult rst = new StreamResult(new File(nuevoArchivo));
-            //Definimos el resultado
-            //Declaramos el transormer que tiene el método. transform(). que necesitamos
+    public int guardarDomcomoArchivo(String nuevoArchivo){
+        int retorno = -1; // si no se guarda devuelve error.
+        // si el String es nulo no hago nada
+        if(nuevoArchivo!= null){
+            File archivoDestino = new File (nuevoArchivo);
+            try {
+                // si el file no es un directorio y
+                if( !archivoDestino.isDirectory() &&
+                        // o no existe y crearé uno nuevo, o existe y puedo sobreescribir encima
+                        ( archivoDestino.createNewFile() || archivoDestino.canWrite()) ){
+                    try{
+                        Source src = new DOMSource(miDocumento); // DEFINIR ORIGEN
+                        StreamResult rst = new StreamResult(archivoDestino);
+                        //Definimos el resultado
+                        //Declaramos el transormer que tiene el método. transform(). que necesitamos
                         
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            
-            transformer.transform(src, (javax.xml.transform.Result)rst);
-            System.out.println("Archivo creado del DOM con éxito\n");
-            
-        }catch(IllegalArgumentException | TransformerException e){
-              e.printStackTrace();  
-        }      
+                        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                        
+                        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                        // aqui hago la impresion:
+                        transformer.transform(src, (javax.xml.transform.Result)rst);
+                        retorno =0; // si llego aqui es que todo fue bien
+                        System.out.println("Archivo creado del DOM con éxito\n");
+                        
+                    }catch(IllegalArgumentException | TransformerException e){
+                        e.printStackTrace();
+                    }          
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+         return retorno;     
     } 
     
     /**
@@ -305,11 +328,14 @@ public class AccesoDOM {
      * @return String ultimoID incrementado
      */
     private String nextID(){
-            String parteTexto;          
-            int parteNumerica;
-            
+            String parteTexto;    // guardo la aprte de texto del id      
+            int parteNumerica;    // guardo la parte numerica del id
+            // la parte de texto del Id son las dos primeras letras
             parteTexto=this.ultimoID.substring(0, 2);
-            parteNumerica =  Integer.parseInt(this.ultimoID.substring(2, this.ultimoID.length()));        
+            // la aprte numerica desde la posicion 2 (3er caracter)hasta el final
+            parteNumerica =  Integer.parseInt(this.ultimoID.substring(2, this.ultimoID.length())); 
+            
+            // asigno el siguiente id a la varibla que guarda el úñtimo y lo devuelvo
             return (this.ultimoID=parteTexto+(++parteNumerica));
         }
     
